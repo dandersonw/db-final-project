@@ -16,9 +16,29 @@ create table series_author (
        foreign key (series_id) references series (id) on delete restrict
 );
 
+create table reading_status (
+       id integer primary key autoincrement,
+       status_name varchar(64)
+);
+insert into reading_status values (NULL, NULL);
+insert into reading_status values (NULL, 'Want to Read');
+insert into reading_status values (NULL, 'Reading');
+insert into reading_status values (NULL, 'Read');
+
 create table books (
        id integer primary key autoincrement,
-       book_name varchar(128) not null
+       title varchar(128) not null,
+       series_id integer nullable references series (id),
+       status integer not null references reading_status (id)
+);
+
+create table book_author (
+       book_id integer not null,
+       author_id integer not null,
+       author_index integer check (0<=author_index) not null, 
+       primary key (author_id, book_id),
+       foreign key (author_id) references authors (id) on delete cascade,
+       foreign key (book_id) references books (id) on delete cascade
 );
 
 create table readinglists (
@@ -31,7 +51,7 @@ create table readinglist_book (
        book_id integer not null,
        primary key (readinglist_id, book_id),
        foreign key (readinglist_id) references readinglists (id) on delete cascade,
-       foreign key (book_id) references books (id) on delete cascade,
+       foreign key (book_id) references books (id) on delete cascade
 );
 
 create table review (
@@ -41,4 +61,3 @@ create table review (
        rating float check (0<=rating<=5) not null,
        foreign key (book_id) references books (id) on delete cascade
 );
-
