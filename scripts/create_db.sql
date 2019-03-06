@@ -28,8 +28,16 @@ insert into reading_status values (NULL, 'Read');
 create table books (
        id integer primary key autoincrement,
        title varchar(128) not null,
-       series_id integer nullable references series (id),
-       status integer not null references reading_status (id)
+       status integer default 1 references reading_status (id)
+);
+
+create table book_series (
+       series_id integer not null,
+       book_id integer not null,
+       ordinal_position integer not null,
+       primary key (series_id, book_id),
+       foreign key (series_id) references series (id) on delete cascade,
+       foreign key (book_id) references books (id) on delete cascade       
 );
 
 create table book_author (

@@ -1,0 +1,4 @@
+dbs/
+__pycache__
+.pytest_cache/
+ReadingList.egg-info/

@@ -1,7 +1,7 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(
     name='ReadingList',
     version='0.1',
-    packages=['readinglist'],
+    packages=find_packages(),
 )
