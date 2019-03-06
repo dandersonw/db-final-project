@@ -1,4 +1,5 @@
-import sqlite3
+import sqlalchemy
+from sqlalchemy.sql import text
 
 import typing
 
@@ -18,29 +19,31 @@ class Book():
                     int(row[2]))
 
 
-def list_books(cursor: sqlite3.Cursor) -> typing.List[Book]:
-    rows = cursor.execute('select * from books').fetchall()
+def list_books(conn: sqlalchemy.engine.Connection) -> typing.List[Book]:
+    rows = conn.execute('select * from books').fetchall()
     return [Book.from_db_row(row) for row in rows]
 
 
-def insert_book(cursor: sqlite3.Cursor,
+def insert_book(conn: sqlalchemy.engine.Connection,
                 title: str,
                 authors: typing.List[Author],
                 status: int):  # TODO: make status an enum or something
-    cursor.execute('insert into books values (NULL, ?, ?)', (title, status))
-    book_id = cursor.lastrowid
+    insertion = conn.execute(text('insert into books values (NULL, :title, :status)'),
+                             title=title,
+                             status=status)
+    book_id = insertion.lastrowid
     for i, authorr in enumerate(authors):
-        cursor.execute('insert into book_author values (?, ?, ?)',
-                       (book_id,
-                        authorr.id,
-                        i))
+        conn.execute(text('insert into book_author values (:book_id, :author_id, :index)'),
+                     book_id=book_id,
+                     author_id=authorr.id,
+                     index=i)
     return Book(book_id, title, status)
 
 
-def get_authors(cursor: sqlite3.Cursor,
+def get_authors(conn: sqlalchemy.engine.Connection,
                 book: Book) -> typing.List[Author]:
-    rows = cursor.execute('select authors.id, author_name '
-                          'from authors inner join book_author on author_id = id '
-                          'where book_id = ?',
-                          (book.id,))
+    rows = conn.execute(text('select authors.id, author_name '
+                             'from authors inner join book_author on author_id = id '
+                             'where book_id = :book_id'),
+                        book_id=book.id)
     return [Author.from_db_row(row) for row in rows]

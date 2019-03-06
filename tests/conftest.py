@@ -1,15 +1,18 @@
-import os
+import sqlalchemy
 import pytest
-import sqlite3
+
+from readinglist import db
 
 
-@pytest.fixture(scope="class")
-def db_class(request):
-    db_path = os.path.join(os.environ['RDLIST_DB_PATH'],
-                           'test.db')
-    connection = sqlite3.connect(db_path)
-    # this is kind of a pain, but neccessary to give us control over
-    # transactions, instead of using the weird automatic transaction management
-    # that the sqlite3 lib provides natively
-    connection.isolation_level = None
-    request.cls.db = connection
+@pytest.fixture(scope="session")
+def db_connection(request):
+    conn: sqlalchemy.engine.Connection = db.engine.connect()
+    yield conn
+    conn.close()
+
+
+@pytest.fixture(scope="function")
+def db_transaction(db_connection):
+    trans: sqlalchemy.engine.Transaction = db_connection.begin()
+    yield trans
+    trans.rollback()
