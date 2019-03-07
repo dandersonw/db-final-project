@@ -4,7 +4,7 @@ from readinglist import series, book, author
 
 
 def test_list_series(db_transaction):
-    assert 1 == len(series.list_series(db_transaction.connection))
+    assert 2 == len(series.list_series(db_transaction.connection))
 
 
 def test_insert_series(db_transaction):

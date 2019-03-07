@@ -2,7 +2,7 @@ from readinglist import author
 
 
 def test_list_authors(db_transaction):
-    assert 3 == len(author.list_authors(db_transaction.connection))
+    assert 4 == len(author.list_authors(db_transaction.connection))
 
 
 def test_insert_author(db_transaction):
