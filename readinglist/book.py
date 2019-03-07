@@ -3,7 +3,7 @@ from sqlalchemy.sql import text
 
 import typing
 
-from .author import Author
+from . import author, book
 
 
 class Book():
@@ -19,14 +19,14 @@ class Book():
                     int(row[2]))
 
 
-def list_books(conn: sqlalchemy.engine.Connection) -> typing.List[Book]:
+def list_books(conn: sqlalchemy.engine.Connection) -> typing.List[book.Book]:
     rows = conn.execute('select * from books').fetchall()
-    return [Book.from_db_row(row) for row in rows]
+    return [book.Book.from_db_row(row) for row in rows]
 
 
 def insert_book(conn: sqlalchemy.engine.Connection,
                 title: str,
-                authors: typing.List[Author],
+                authors: typing.List[author.Author],
                 status: int):  # TODO: make status an enum or something
     insertion = conn.execute(text('insert into books values (NULL, :title, :status)'),
                              title=title,
@@ -41,9 +41,9 @@ def insert_book(conn: sqlalchemy.engine.Connection,
 
 
 def get_authors(conn: sqlalchemy.engine.Connection,
-                book: Book) -> typing.List[Author]:
+                book: Book) -> typing.List[author.Author]:
     rows = conn.execute(text('select authors.id, author_name '
                              'from authors inner join book_author on author_id = id '
                              'where book_id = :book_id'),
                         book_id=book.id)
-    return [Author.from_db_row(row) for row in rows]
+    return [author.Author.from_db_row(row) for row in rows]

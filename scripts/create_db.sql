@@ -9,8 +9,8 @@ create table series (
 );
 
 create table series_author (
-       author_id integer not null,
        series_id integer not null,
+       author_id integer not null,
        primary key (author_id, series_id),
        foreign key (author_id) references authors (id) on delete restrict,
        foreign key (series_id) references series (id) on delete restrict
@@ -44,7 +44,7 @@ create table book_author (
        book_id integer not null,
        author_id integer not null,
        author_index integer not null, 
-        check (0<=author_index),
+       check (0<=author_index),
        primary key (author_id, book_id),
        foreign key (author_id) references authors (id) on delete cascade,
        foreign key (book_id) references books (id) on delete cascade
