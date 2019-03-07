@@ -37,8 +37,14 @@ def insert_review(conn: sqlalchemy.engine.Connection,
 
 def get_review_for_book(conn: sqlalchemy.engine.Connection,
                         bookk: book.Book) -> typing.Optional[Review]:
-    result = conn.execute(text('select book_id, review_text from '
+    result = conn.execute(text('select book_id, review_text, rating from '
                                'books join reviews on book_id = id '
                                'where book_id = :book_id'),
                           book_id=bookk.id).fetchone()
     return None if result is None else Review.from_db_row(result)
+
+
+def remove_review(conn: sqlalchemy.engine.Connection,
+                  review: Review):
+    conn.execute(text('delete from reviews where book_id = :book_id'),
+                 book_id=review.book_id)
