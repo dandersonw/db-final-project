@@ -36,3 +36,31 @@ def insert_readinglist(conn: sqlalchemy.engine.Connection,
                              readinglist_name=readinglist_name)
     readinglist_id = insertion.lastrowid
     return Readinglist(readinglist_id, readinglist_name)
+
+
+def add_book_to_readinglist(conn: sqlalchemy.engine.Connection,
+                            readinglist: Readinglist,
+                            bookk: book.Book):
+    conn.execute(text('insert into readinglist_book values (:readinglist_id, :book_id)'),
+                 book_id=bookk.id,
+                 readinglist_id=readinglist.id)
+
+
+def remove_book_from_readinglist(conn: sqlalchemy.engine.Connection,
+                                 readinglist: Readinglist,
+                                 bookk: book.Book):
+    conn.execute(text('delete from readinglist_book '
+                      'where readinglist_id = :readinglist_id '
+                      '&& book_id = :book_id'),
+                 book_id=bookk.id,
+                 readinglist_id=readinglist.id)
+
+
+def get_books_on_readinglist(conn: sqlalchemy.engine.Connection,
+                             readinglist: Readinglist) -> typing.List[book.Book]:
+    rows = conn.execute(text('select books.id, title, status '
+                             'from books inner join readinglist_book on book_id = id '
+                             'where readinglist_id = :readinglist_id'),
+                        readinglist_id=readinglist.id)
+    return [book.Book.from_db_row(row) for row in rows]
+

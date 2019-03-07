@@ -16,7 +16,7 @@ class Book():
     def from_db_row(row):
         return Book(int(row[0]),
                     row[1],
-                    int(row[2]))
+                    reading_status.Status.from_id(int(row[2])))
 
 
 def get_book_by_name(conn: sqlalchemy.engine.Connection,
@@ -49,9 +49,17 @@ def insert_book(conn: sqlalchemy.engine.Connection,
 
 
 def get_authors(conn: sqlalchemy.engine.Connection,
-                book: Book) -> typing.List[author.Author]:
+                bookk: Book) -> typing.List[author.Author]:
     rows = conn.execute(text('select authors.id, author_name '
                              'from authors inner join book_author on author_id = id '
                              'where book_id = :book_id'),
-                        book_id=book.id)
+                        book_id=bookk.id)
     return [author.Author.from_db_row(row) for row in rows]
+
+
+def update_book_status(conn: sqlalchemy.engine.Connection,
+                       bookk: Book,
+                       new_status: reading_status.Status):
+    conn.execute(text('update books set status = :status_id where id = :book_id'),
+                 book_id=bookk.id,
+                 status_id=new_status.id)

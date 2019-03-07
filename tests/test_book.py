@@ -15,3 +15,12 @@ def test_insert_book(db_transaction):
     assert all_books[-1].title == title
     authors = book.get_authors(conn, all_books[-1])
     assert authors[0].id == authorr.id
+
+
+def test_update_status(db_transaction):
+    conn = db_transaction.connection
+    bookk = book.get_book_by_name(conn, 'Good Omens')
+    assert bookk.status == reading_status.UNSET
+    book.update_book_status(conn, bookk, reading_status.WANT_TO_READ)
+    bookk = book.get_book_by_name(conn, 'Good Omens')
+    assert bookk.status == reading_status.WANT_TO_READ

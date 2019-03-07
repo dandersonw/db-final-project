@@ -11,6 +11,13 @@ class Status():
     def __str__(self):
         return Status.names[self.id]
 
+    @staticmethod
+    def from_id(id):
+        return {1: UNSET,
+                2: WANT_TO_READ,
+                3: READING,
+                4: READ}[id]
+
 
 UNSET = Status(1)
 WANT_TO_READ = Status(2)
