@@ -46,3 +46,7 @@ insert into readinglist_book values
        (1, 6),
        (1, 7),
        (1, 8);
+
+insert into reviews values
+       (1, 'Intriguing.', 4.1),
+       (2, 'Even more intriguing', 4.4);

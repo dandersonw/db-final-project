@@ -63,11 +63,24 @@ create table readinglist_book (
        foreign key (book_id) references books (id) on delete cascade
 );
 
-create table review (
-       id integer primary key auto_increment,
+create table reviews (
        book_id integer not null,
        review_text text not null,
        rating decimal(2, 1) not null,
        check (0<=rating<=5),
+       primary key (book_id),
        foreign key (book_id) references books (id) on delete cascade
 );
+
+create procedure check_rating (in rating decimal(2, 1))
+begin
+        if rating < 0 or rating > 5 then
+           signal sqlstate '45000'
+           set MESSAGE_TEXT = 'check constraint on reviews.rating failed';
+        end if;
+end;
+
+create trigger reviews_before_insert before insert on reviews
+for each row call check_rating(NEW.rating);
+
+

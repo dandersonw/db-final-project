@@ -3,7 +3,7 @@ from sqlalchemy.sql import text
 
 import typing
 
-from . import author, book
+from . import author
 
 
 class Book():
@@ -19,9 +19,17 @@ class Book():
                     int(row[2]))
 
 
-def list_books(conn: sqlalchemy.engine.Connection) -> typing.List[book.Book]:
+def get_book_by_name(conn: sqlalchemy.engine.Connection,
+                     name: str) -> typing.Optional[Book]:
+    result = conn.execute(text('select * from books where title = :name'),
+                          name=name)\
+                 .fetchone()
+    return None if result is None else Book.from_db_row(result)
+
+
+def list_books(conn: sqlalchemy.engine.Connection) -> typing.List[Book]:
     rows = conn.execute('select * from books').fetchall()
-    return [book.Book.from_db_row(row) for row in rows]
+    return [Book.from_db_row(row) for row in rows]
 
 
 def insert_book(conn: sqlalchemy.engine.Connection,

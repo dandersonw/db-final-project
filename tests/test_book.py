@@ -1,6 +1,3 @@
-import unittest
-import pytest
-
 from readinglist import book, author
 
 
