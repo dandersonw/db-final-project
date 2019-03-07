@@ -1,4 +1,4 @@
-from readinglist import book, author
+from readinglist import book, author, reading_status
 
 
 def test_list_books(db_transaction):
@@ -9,7 +9,7 @@ def test_insert_book(db_transaction):
     conn = db_transaction.connection
     authorr = author.get_author_by_name(conn, 'Terry Pratchett')
     title = 'Equal Rites'
-    book.insert_book(conn, title, [authorr], 1)
+    book.insert_book(conn, title, [authorr], reading_status.UNSET)
     all_books = book.list_books(conn)
     assert 9 == len(all_books)
     assert all_books[-1].title == title

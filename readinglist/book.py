@@ -3,7 +3,7 @@ from sqlalchemy.sql import text
 
 import typing
 
-from . import author
+from . import author, reading_status
 
 
 class Book():
@@ -35,10 +35,10 @@ def list_books(conn: sqlalchemy.engine.Connection) -> typing.List[Book]:
 def insert_book(conn: sqlalchemy.engine.Connection,
                 title: str,
                 authors: typing.List[author.Author],
-                status: int):  # TODO: make status an enum or something
+                status: reading_status.Status):
     insertion = conn.execute(text('insert into books values (NULL, :title, :status)'),
                              title=title,
-                             status=status)
+                             status=status.id)
     book_id = insertion.lastrowid
     for i, authorr in enumerate(authors):
         conn.execute(text('insert into book_author values (:book_id, :author_id, :index)'),

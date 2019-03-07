@@ -1,6 +1,6 @@
 import sqlalchemy
 
-from readinglist import series, book, author
+from readinglist import series, book, author, reading_status
 
 
 def test_list_series(db_transaction):
@@ -12,7 +12,8 @@ def test_insert_series(db_transaction):
     authorr = author.get_author_by_name(conn, 'Terry Pratchett')
     series_name = 'Discworld'
     book_titles = ['The Color of Magic', 'Lights Fantastic']
-    books = [book.insert_book(conn, title, [authorr], 1) for title in book_titles]
+    books = [book.insert_book(conn, title, [authorr], reading_status.UNSET)
+             for title in book_titles]
     inserted = series.insert_series(conn, series_name, [authorr], books)
     fetched = series.get_series_by_name(conn, series_name)
     assert inserted.id == fetched.id
