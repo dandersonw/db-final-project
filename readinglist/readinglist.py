@@ -63,4 +63,3 @@ def get_books_on_readinglist(conn: sqlalchemy.engine.Connection,
                              'where readinglist_id = :readinglist_id'),
                         readinglist_id=readinglist.id)
     return [book.Book.from_db_row(row) for row in rows]
-

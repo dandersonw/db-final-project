@@ -17,3 +17,9 @@ def test_insert_series(db_transaction):
     inserted = series.insert_series(conn, series_name, [authorr], books)
     fetched = series.get_series_by_name(conn, series_name)
     assert inserted.id == fetched.id
+
+
+def test_get_series(db_transaction):
+    bookk = book.get_book_by_name(db_transaction.connection, '1Q84 Volume 1')
+    seriess = book.get_series(db_transaction.connection, bookk)
+    assert '1Q84' == seriess.series_name

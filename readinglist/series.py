@@ -3,8 +3,6 @@ from sqlalchemy.sql import text
 
 import typing
 
-from . import author, book
-
 
 class Series():
     def __init__(self, id, series_name):
@@ -32,8 +30,8 @@ def list_series(conn: sqlalchemy.engine.Connection) -> typing.List[Series]:
 
 def insert_series(conn: sqlalchemy.engine.Connection,
                   series_name: str,
-                  authors: typing.List[author.Author],
-                  books: typing.List[book.Book]):
+                  authors,
+                  books):
     insertion = conn.execute(text('insert into series values (NULL, :series_name)'),
                              series_name=series_name)
     series_id = insertion.lastrowid

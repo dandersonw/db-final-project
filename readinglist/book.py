@@ -3,7 +3,7 @@ from sqlalchemy.sql import text
 
 import typing
 
-from . import author, reading_status
+from . import author, reading_status, review, series
 
 
 class Book():
@@ -17,6 +17,11 @@ class Book():
         return Book(int(row[0]),
                     row[1],
                     reading_status.Status.from_id(int(row[2])))
+
+    def attach_joined_attributes(self, conn: sqlalchemy.engine.Connection):
+        self.authors = get_authors_for_book(conn, self)
+        self.review = review.get_review_for_book(conn, self)
+        self.series = get_series(conn, self)
 
 
 def get_book_by_name(conn: sqlalchemy.engine.Connection,
@@ -48,8 +53,8 @@ def insert_book(conn: sqlalchemy.engine.Connection,
     return Book(book_id, title, status)
 
 
-def get_authors(conn: sqlalchemy.engine.Connection,
-                bookk: Book) -> typing.List[author.Author]:
+def get_authors_for_book(conn: sqlalchemy.engine.Connection,
+                         bookk: Book) -> typing.List[author.Author]:
     rows = conn.execute(text('select authors.id, author_name '
                              'from authors inner join book_author on author_id = id '
                              'where book_id = :book_id'),
@@ -57,9 +62,26 @@ def get_authors(conn: sqlalchemy.engine.Connection,
     return [author.Author.from_db_row(row) for row in rows]
 
 
-def update_book_status(conn: sqlalchemy.engine.Connection,
-                       bookk: Book,
-                       new_status: reading_status.Status):
+def get_series(conn: sqlalchemy.engine.Connection,
+               bookk: Book) -> typing.List[series.Series]:
+    result = conn.execute(text('select series.id, series_name '
+                               'from series inner join book_series on book_id = id '
+                               'where book_id = :book_id'),
+                          book_id=bookk.id).fetchone()
+    return None if result is None else series.Series.from_db_row(result)
+
+
+def get_books_by_reading_status(conn: sqlalchemy.engine.Connection,
+                                status: reading_status.Status) -> typing.List[Book]:
+    rows = conn.execute(text('select * from books '
+                             'where status = :status'),
+                        status=status.id)
+    return [Book.from_db_row(row) for row in rows]
+
+
+def set_book_status(conn: sqlalchemy.engine.Connection,
+                    bookk: Book,
+                    new_status: reading_status.Status):
     conn.execute(text('update books set status = :status_id where id = :book_id'),
                  book_id=bookk.id,
                  status_id=new_status.id)

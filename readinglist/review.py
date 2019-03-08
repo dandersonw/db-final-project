@@ -3,8 +3,6 @@ from sqlalchemy.sql import text
 
 import typing
 
-from . import book
-
 
 class Review():
     def __init__(self, book_id, review_text, rating):
@@ -25,7 +23,7 @@ def list_reviews(conn: sqlalchemy.engine.Connection) -> typing.List[Review]:
 
 
 def insert_review(conn: sqlalchemy.engine.Connection,
-                  bookk: book.Book,
+                  bookk,
                   review_text: str,
                   rating: float):  # TODO: make status an enum or something
     conn.execute(text('insert into reviews values (:book_id, :review_text, :rating)'),
@@ -36,7 +34,7 @@ def insert_review(conn: sqlalchemy.engine.Connection,
 
 
 def get_review_for_book(conn: sqlalchemy.engine.Connection,
-                        bookk: book.Book) -> typing.Optional[Review]:
+                        bookk) -> typing.Optional[Review]:
     result = conn.execute(text('select book_id, review_text, rating from '
                                'books join reviews on book_id = id '
                                'where book_id = :book_id'),
