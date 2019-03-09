@@ -25,5 +25,7 @@ echo "hostname=$hostname" >> $RDLIST_CONFIG_PATH/db_config
 echo "port=$port" >> $RDLIST_CONFIG_PATH/db_config
 
 echo "Enter MySQL root password"
-echo "GRANT ALL PRIVILEGES ON *.* TO '$username'@'$hostname' IDENTIFIED BY '$pass';" \
+echo "CREATE USER '$username'@'$hostname' IDENTIFIED BY '$pass';" \
+    | mysql --host="$hostname" --port="$port" -uroot -p
+echo "GRANT ALL PRIVILEGES ON *.* TO '$username'@'$hostname';" \
     | mysql --host="$hostname" --port="$port" -uroot -p

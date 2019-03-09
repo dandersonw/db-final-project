@@ -25,4 +25,4 @@ generate_test_db:
 	RDLIST_ENV=test python scripts/insert_test_data.py
 
 test: generate_test_db
-	RDLIST_ENV=test	pytest
+	RDLIST_ENV=test	python -m pytest

@@ -1,3 +1,4 @@
 sqlalchemy
 sqlalchemy-utils
 mysqlclient
+pytest
