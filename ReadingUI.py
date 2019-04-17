@@ -127,7 +127,7 @@ class ReadingListUI:
         add_book_button = Button(add_book_window,
                                  text = "Add Book",
                                  command=self._add_book_hook(add_book_window, book_name_text))
-        #Add book to backend
+
         add_book_button.place(x = 475, y = 260)
 
         add_book_window.geometry("1000x1000")
@@ -148,33 +148,23 @@ class ReadingListUI:
         self.series_list.sort(key=lambda s: s.series_name)
 
         print("Series Sort!")
-        """
-        Connect to backend for adding book
-        """
+
 
     def chronological(self):
         print("Chronological(default) sort!")
-        """
-        Connect to backend for adding book
-        """
+
 
     def rating(self):
         print("Rating sort!")
-        """
-        Connect to backend for adding book
-        """
+
 
     def books(self):
         print("Books list!")
-        """
-        Connect to backend for adding book
-        """
+
 
     def reviews(self):
         print("Books + Reviews List!")
-        """
-        Connect to backend for adding book
-        """
+
     def remove(self):
         current_selection = self.book_list.curselection()
         self.book_list.delete(current_selection)
