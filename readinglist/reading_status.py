@@ -18,6 +18,16 @@ class Status():
                 3: READING,
                 4: READ}[id]
 
+    @staticmethod
+    def from_str(string):
+        if string.lower() == 'read':
+            return READ
+        elif string.lower() == 'want to read':
+            return WANT_TO_READ
+        elif string.lower() == 'reading':
+            return READING
+        return UNSET
+
 
 UNSET = Status(1)
 WANT_TO_READ = Status(2)

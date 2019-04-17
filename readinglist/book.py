@@ -91,3 +91,23 @@ def set_book_status(conn: sqlalchemy.engine.Connection,
     conn.execute(text('update books set status = :status_id where id = :book_id'),
                  book_id=bookk.id,
                  status_id=new_status.id)
+
+
+def insert_book_into_series(conn: sqlalchemy.engine.Connection,
+                            bookk,
+                            series: series.Series,
+                            position=None):
+    if position is None:
+        position = len(get_books_by_series(conn, series))
+    conn.execute(text('insert into book_series values (:book_id, :series_id, :position)'),
+                 book_id=bookk.id,
+                 series_id=series.id,
+                 position=position)
+
+
+def get_books_by_series(conn, series: series.Series):
+    rows = conn.execute(text('select book_id, title, status from books '
+                             'join book_series on book_id = id '
+                             'where series_id = :series_id'),
+                        series_id=series.id).fetchall()
+    return [Book.from_db_row(row) for row in rows]

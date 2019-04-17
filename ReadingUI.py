@@ -148,19 +148,53 @@ class ReadingListUI:
 
         add_book_button = Button(add_book_window,
                                  text = "Add Book",
-                                 command=self._add_book_hook(add_book_window, book_name_text))
+                                 command=self._add_book_hook(add_book_window,
+                                                             book_name_text,
+                                                             series_text,
+                                                             rating_text,
+                                                             review_text,
+                                                             reading_status_text))
 
         add_book_button.place(x = 475, y = 420)
 
         add_book_window.geometry("1000x1000")
 
-    def _add_book_hook(self, window, book_name_text):
+    def _add_book_hook(self,
+                       window,
+                       book_name_text,
+                       series_text,
+                       rating_text,
+                       review_text,
+                       reading_status_text):
         def result():
             title = book_name_text.get("1.0", END).strip()
-            readinglist.book.insert_book(conn,
-                                         title,
-                                         [],
-                                         readinglist.reading_status.UNSET)
+            author_name = series_text.get("1.0", END).strip()
+            if author_name:
+                authors = [readinglist.author.get_author_by_name(conn, author_name)]
+            else:
+                authors = []
+            book = readinglist.book.insert_book(conn,
+                                                title,
+                                                authors,
+                                                readinglist.reading_status.UNSET)
+            series_name = series_text.get("1.0", END).strip()
+            if series_name:
+                series = readinglist.series.get_series_by_name(conn, series_name)
+                readinglist.book.insert_book_into_series(conn,
+                                                         book,
+                                                         series)
+            rating = rating_text.get("1.0", END).strip()
+            if rating:
+                rating = float(rating_text.get("1.0", END).strip())
+                review = review_text.get("1.0", END).strip()
+                readinglist.review.insert_review(conn,
+                                                 book,
+                                                 review,
+                                                 rating)
+            status = reading_status_text.get("1.0", END).strip()
+            if status:
+                status = readinglist.reading_status.Status.from_str(status)
+                readinglist.book.set_book_status(conn, book, status)
             window.destroy()
             self.list_books()
         return result
