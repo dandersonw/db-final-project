@@ -1,9 +1,13 @@
 from tkinter import *
 from PIL import ImageTk, Image
 
+import readinglist
+
+conn = readinglist.db.engine.connect()
+
 class ReadingListUI:
 
-    series_list = ["A", "B", "D", "Aa", "Ab"] #Feed series column from database here, else, SQL SELECT statement for sort
+    series_list = readinglist.series.list_series(conn)
 
     def __init__(self, master):
         self.master = master
@@ -54,12 +58,22 @@ class ReadingListUI:
         self.book_list.place(x = 150, y = 450)
         scroll.pack(side=RIGHT, fill=Y) #----
 
-        table = [["spam", 42, "test", ""], ["eggs", 451, "", "we"], ["bacon", "True", "", ""]]
-        headers = ["item", "qty", "sd", "again"] #Test set
+        self.list_books()
+
+    def list_books(self):
+        self.book_list.delete(0)
+        self.books = readinglist.book.list_books(conn)
+        for b in self.books:
+            b.attach_joined_attributes(conn)
+        headers = ["title", "status", "series", "rating"] #Test set
 
         row_format = "{:<8}  {:>8}  {:<8}  {:8}"
         self.book_list.insert(0, row_format.format(*headers, sp=" " * 2))
-        for items in table:
+        for book in self.books:
+            items = (book.title,
+                     str(book.status),
+                     book.series.series_name if book.series is not None else '',
+                     book.review.rating if book.review is not None else '')
             self.book_list.insert(END, row_format.format(*items, sp=" " * 2))
 
     def addBook(self):
@@ -86,10 +100,6 @@ class ReadingListUI:
         book_name_text = Text(add_book_window, width = 30, height = 1)
         book_name_text.place(x = 550, y = 60)
 
-        #Add book to list, text not visible, but, row added
-        input = book_name_text.get("1.0", END)
-        self.book_list.insert(END, input)
-
         date_started_label = Label(add_book_window, text    ="Date Started *")
         date_started_label.place(x = 400, y = 100)
 
@@ -114,15 +124,28 @@ class ReadingListUI:
         review_text = Text(add_book_window, width=30, height=1)
         review_text.place(x = 550, y = 220)
 
-        add_book_button = Button(add_book_window, text = "Add Book", command = add_book_window.destroy)
+        add_book_button = Button(add_book_window,
+                                 text = "Add Book",
+                                 command=self._add_book_hook(add_book_window, book_name_text))
         #Add book to backend
         add_book_button.place(x = 475, y = 260)
 
         add_book_window.geometry("1000x1000")
 
+    def _add_book_hook(self, window, book_name_text):
+        def result():
+            title = book_name_text.get("1.0", END).strip()
+            readinglist.book.insert_book(conn,
+                                         title,
+                                         [],
+                                         readinglist.reading_status.UNSET)
+            window.destroy()
+            self.list_books()
+        return result
+
     def series(self):
 
-        self.series_list.sort()
+        self.series_list.sort(key=lambda s: s.series_name)
 
         print("Series Sort!")
         """
@@ -155,6 +178,8 @@ class ReadingListUI:
     def remove(self):
         current_selection = self.book_list.curselection()
         self.book_list.delete(current_selection)
+        book = self.books[current_selection[0] - 1]
+        readinglist.book.delete_book(conn, book)
         # Connect to Database
 
 root = Tk()

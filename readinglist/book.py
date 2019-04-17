@@ -53,6 +53,12 @@ def insert_book(conn: sqlalchemy.engine.Connection,
     return Book(book_id, title, status)
 
 
+def delete_book(conn,
+                bookk):
+    conn.execute(text('delete from books where id = :book_id'),
+                 book_id=bookk.id)
+
+
 def get_authors_for_book(conn: sqlalchemy.engine.Connection,
                          bookk: Book) -> typing.List[author.Author]:
     rows = conn.execute(text('select authors.id, author_name '

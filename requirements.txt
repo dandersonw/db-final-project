@@ -2,3 +2,4 @@ sqlalchemy
 sqlalchemy-utils
 mysqlclient
 pytest
+pillow
