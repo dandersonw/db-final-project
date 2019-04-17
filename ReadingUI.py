@@ -38,17 +38,20 @@ class ReadingListUI:
         self.rating_sort_button = Button(master, text="Sort By Rating", command=self.rating)
         self.rating_sort_button.place(x = 350, y = 250)
 
+        self.author_sort_button = Button(master, text="Sort By Author", command=self.author)
+        self.author_sort_button.place(x = 500, y = 250)
+
         self.books_button = Button(master, text="Books", command=self.books)
-        self.books_button.place(x = 500, y = 250)
+        self.books_button.place(x = 350, y = 300)
 
         self.reviews_button = Button(master, text="Reviews", command=self.reviews)
-        self.reviews_button.place(x = 350, y = 300)
+        self.reviews_button.place(x = 500, y = 300)
 
         self.remove_book_button = Button(master, text="Remove Book", command=self.remove)
-        self.remove_book_button.place(x = 500, y = 300)
+        self.remove_book_button.place(x = 420, y = 350)
 
         self.close_button = Button(master, text="Close", command=master.quit)
-        self.close_button.place(x = 450, y = 350)
+        self.close_button.place(x = 450, y = 400)
 
         self.book_list = Listbox(root, width = 75, height = 10)
         scroll = Scrollbar(root, command = self.book_list.yview)#----
@@ -77,9 +80,6 @@ class ReadingListUI:
             self.book_list.insert(END, row_format.format(*items, sp=" " * 2))
 
     def addBook(self):
-        """
-        Connect to backend for adding book
-        """
         add_book_window = Toplevel()
         add_book_window.title("Add a Book!")
 
@@ -95,40 +95,62 @@ class ReadingListUI:
         ABlabel.place(x = 350, y = 5)
 
         book_name_label = Label(add_book_window, text = "Book Name *")
-        book_name_label.place(x = 400, y = 60)
+        book_name_label.place(x = 400, y = 100)
 
         book_name_text = Text(add_book_window, width = 30, height = 1)
-        book_name_text.place(x = 550, y = 60)
+        book_name_text.place(x = 550, y = 100)
 
-        date_started_label = Label(add_book_window, text    ="Date Started *")
-        date_started_label.place(x = 400, y = 100)
+        #Add book to list, text not visible, but, row added
+        input = book_name_text.get("1.0", END)
+        self.book_list.insert(END, input)
+
+        author_label = Label(add_book_window, text="Author*")
+        author_label.place(x = 400, y = 140)
+
+        author_text = Text(add_book_window, width = 30, height = 1)
+        author_text.place(x = 550, y = 140)
+
+        series_label = Label(add_book_window, text="Series")
+        series_label.place(x = 400, y = 180)
+
+        series_text = Text(add_book_window, width = 30, height = 1)
+        series_text.place(x = 550, y = 180)
+
+        date_started_label = Label(add_book_window, text="Date Started *")
+        date_started_label.place(x = 400, y = 220)
 
         date_started_text = Text(add_book_window, width = 30, height = 1)
-        date_started_text.place(x = 550, y = 100)
+        date_started_text.place(x = 550, y = 220)
 
         data_ended_label = Label(add_book_window, text="Date Completed")
-        data_ended_label.place(x = 400, y = 140)
+        data_ended_label.place(x = 400, y = 260)
 
         date_ended_text = Text(add_book_window, width=30, height=1)
-        date_ended_text.place(x = 550, y = 140)
+        date_ended_text.place(x = 550, y = 260)
 
         rating_label = Label(add_book_window, text="Rating")
-        rating_label.place(x = 400, y = 180)
+        rating_label.place(x = 400, y = 300)
 
         rating_text = Text(add_book_window, width=30, height=1)
-        rating_text.place(x = 550, y = 180)
+        rating_text.place(x = 550, y = 300)
 
         review_label = Label(add_book_window, text="Review")
-        review_label.place(x = 400, y = 220)
+        review_label.place(x = 400, y = 340)
 
         review_text = Text(add_book_window, width=30, height=1)
-        review_text.place(x = 550, y = 220)
+        review_text.place(x = 550, y = 340)
+
+        reading_status_label = Label(add_book_window, text="Reading Status")
+        reading_status_label.place(x = 400, y = 380)
+
+        reading_status_text = Text(add_book_window, width = 30, height = 1)
+        reading_status_text.place(x = 550, y = 380)
 
         add_book_button = Button(add_book_window,
                                  text = "Add Book",
                                  command=self._add_book_hook(add_book_window, book_name_text))
 
-        add_book_button.place(x = 475, y = 260)
+        add_book_button.place(x = 475, y = 420)
 
         add_book_window.geometry("1000x1000")
 
@@ -171,6 +193,12 @@ class ReadingListUI:
         book = self.books[current_selection[0] - 1]
         readinglist.book.delete_book(conn, book)
         # Connect to Database
+        
+    def author(self):
+        """
+        Connect to backend for author sort
+        """
+        
 
 root = Tk()
 reading_gui = ReadingListUI(root)
