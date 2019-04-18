@@ -1,9 +1,9 @@
-Add Series (FE + BE) [DONE]
-Functionality to add reviews, rating, status for Series without book needing to be stated (BE) [TODO DERICK]
-Add individual windows for Series, Author, Edit (FE) [DONE]
-Add Author (BEC) [DONE]
-Edit Book (BEC) [DONE] [NEEDS BE FUNTIONALITY TODO DERICK]
-Implement Sorts (FE) [DONE]
-Functionality to modify records of a book (set methods) (BE) [TODO DERICK]
-Add table for rating-id map [TODO DERICK]
-Rewrite UI Table for sort visualisation that is not book (FE) [TODO HARSHITHA]
+[DONE] Add Series (FE + BE) 
+[TODO DERICK] Functionality to add reviews, rating, status for Series without book needing to be stated (BE) 
+[DONE] Add individual windows for Series, Author, Edit (FE)
+[DONE] Add Author (BEC)
+[DONE HARSHITHA] [NEEDS BACKEND FUNTIONALITY TODO DERICK] Edit Book (BEC) 
+[DONE] Implement Sorts (FE) 
+[TODO DERICK] Functionality to modify records of a book (set methods) (BE) 
+[TODO DERICK] Add table for rating-id map 
+[TODO HARSHITHA] Rewrite UI Table for sort visualisation that is not book (FE) 
