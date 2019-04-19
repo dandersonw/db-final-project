@@ -5,6 +5,6 @@
 [DONE HARSHITHA] [NEEDS BACKEND FUNTIONALITY TODO DERICK] Edit Book (BEC) 
 [DONE] Implement Sorts (FE) 
 [DONE DERICK] Functionality to modify records of a book (set methods) (BE)
-[TODO DERICK] Add table for rating-id map 
-[TODO HARSHITHA] Rewrite UI Table for sort visualisation that is not book (FE) 
-[TODO] Fix Deletion 
+[DONE] Add table for rating-id map 
+[DONE] Rewrite UI Table for sort visualisation that is not book (FE) 
+[DONE] Fix Deletion 
