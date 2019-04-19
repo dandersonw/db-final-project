@@ -106,15 +106,51 @@ Going in a little deeper into the home page. The reading list available to the u
 restricted to the default visible order. The user has the capability to re-order the list in 
 chronological order (the default order), descending order of ratings (given that a rating is specified), 
 alphabetic order of the series the book belongs to (given that a series is specified) and alphabetic 
-order of the book's author name(given that na author is specified). The user just needs to click on 
+order of the book's author name(given that am author is specified). The user just needs to click on 
 the appropriately labled button when needed.
 
 ADDING A BOOK - 
 
 In order to add a book, the user needs to click on the 'Add a Book' button. The prompts a new window to 
 be opened where the user can enter the book name, author, series, start date, date of comlpletion, 
-ratings, reviews and reading status of the book. After entering all information the user 
+ratings, reviews and reading status of the book. After entering all information the user deems necessary, 
+they just needs to click 'Add Book'. This will prompt the window to close and the book will be seen in 
+the reading list on the homepage. From a backend perspective, the book will be added to the Books table 
+of the database.
 
+VIEWING/EDITING A BOOK - 
+
+The application gives the user the capability to view in detail and edit any preexisting book in the 
+database. In order to do this, the user needs to choose the book from the table and click on the 
+'View/Edit Book' button on the home screen. This prompts a new window to be opened with the details 
+of the book that are available prefilled. The user can now edit the book how they see fit (change the 
+name, date of start, author, rating, review, etc) and once done editing, they click "Edit Book" and this 
+will prompt the window to close and the book will be edited. This edit will be visible in the reading list 
+on the hompage and from a backend perspective, in the database as well.
+
+ADDING A SERIES - 
+
+The user can also add a series without having to add a book in that series. To do this, the user needs to 
+click the 'Add Series' button on the homepage which prompts a new window to open. Here the user can add the 
+series along with the author name. Again, the only required field is the name of the series here. After 
+entering all the information the user wishes to add, they click the 'Add Series' button will prompt the 
+window to close and the series will be added to the series table. This is visible in the backend database 
+Series table.
+
+ADDING AN AUTHOR - 
+
+The user can also add an author without having to add a book in that author. To do this, the user needs to 
+click the 'Add Author' button on the homepage which prompts a new window to open. Here the user can add the 
+author name. After entering all the information, the user can click the 'Add Author' button which will will 
+prompt the window to close and the author will be added to the author table. This is visible in the backend 
+database Authors table.
+
+On the homepage, the user also has the ability to view all books (with the book name, series (if available), 
+status of reading and rating, OR they can view just books and ratings/reviews by clicking the appropriate 
+button between 'Books' and 'Reviews'.
+
+In order to close the application, the user just needs to click the so appropriately named 'Close' button on the 
+homepage, right above the reading list. 
 
 \section*{Lessons Learned}
 
@@ -127,11 +163,19 @@ so he found it interesting to without a framework create from scratch
 some of the trappings of a real project
 (dev/test environments, tests, etc.).
 
-% TODO - Harshitha
+Harshitha had no experience with Python prior to this project. She, however, does have extensive experience 
+in building full scale applications with MySQL, but, with Java. This is not the first application she has 
+developed with a MySQL backend. She found it interesting to see the similarities between the Java Swing 
+library and Python Tkinter library when it came to UI Development. Not only this, similarities between 
+connecting MySQL to Java and Python were also observed and appretiated. One thing, however, she did not get 
+a chance to research during development was whether it was possible to encode an entire MySQL Database in 
+Python like possible in Java.
 
 \subsubsection*{Known Unworking Code}
 
-% TODO - Harshitha
+When adding a new book, there are issues with the backend at times that throws errors as it doesn't 
+recognise that procedures called do exist. This does not happen at all times and it is hard to zero 
+in on the exact cause of error as the error is sporadic.
 
 \section*{Future Work}
 
