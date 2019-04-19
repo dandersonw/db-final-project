@@ -83,10 +83,22 @@ end;
 create function series_len (series_id integer)
 returns integer
 begin
-  return (select count(*) from book_series where book_series.series_id = series_id);
+        return (select count(*) from book_series where book_series.series_id = series_id);
+end;
+
+create procedure check_series_position (in series_id integer, in ord_position integer)
+begin
+        if (select exists(select * from book_series
+                          where book_series.series_id = series_id
+                                && ordinal_position = ord_position)) then
+           signal sqlstate '45000'
+           set MESSAGE_TEXT = 'check constraint on book_series.ordinal_position failed';
+        end if;
+
 end;
 
 create trigger reviews_before_insert before insert on reviews
 for each row call check_rating(NEW.rating);
 
-
+create trigger series_before_insert before insert on book_series
+for each row call check_series_position(NEW.series_id, NEW.ordinal_position);
