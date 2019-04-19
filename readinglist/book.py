@@ -11,6 +11,7 @@ class Book():
         self.id = id
         self.title = title
         self.status = status
+        self._expanded = False
 
     @staticmethod
     def from_db_row(row):
@@ -19,9 +20,15 @@ class Book():
                     reading_status.Status.from_id(int(row[2])))
 
     def attach_joined_attributes(self, conn: sqlalchemy.engine.Connection):
+        self._expanded = True
         self.authors = get_authors_for_book(conn, self)
         self.review = review.get_review_for_book(conn, self)
         self.series = get_series(conn, self)
+
+    def get_author_string(self):
+        assert(self._expanded)
+        return ', '.join([authorr.name
+                          for authorr in self.authors])
 
 
 def get_book_by_name(conn: sqlalchemy.engine.Connection,
@@ -71,7 +78,7 @@ def get_authors_for_book(conn: sqlalchemy.engine.Connection,
 def get_series(conn: sqlalchemy.engine.Connection,
                bookk: Book) -> typing.List[series.Series]:
     result = conn.execute(text('select series.id, series_name '
-                               'from series inner join book_series on book_id = id '
+                               'from series inner join book_series on series_id = id '
                                'where book_id = :book_id'),
                           book_id=bookk.id).fetchone()
     return None if result is None else series.Series.from_db_row(result)
@@ -93,8 +100,21 @@ def set_book_status(conn: sqlalchemy.engine.Connection,
                  status_id=new_status.id)
 
 
+def set_authors(conn,
+                bookk: Book,
+                authors: typing.List[author.Author]):
+    conn.execute(text('delete from book_author '
+                      'where book_id = :book_id'),
+                 book_id=bookk.id)
+    for i, authorr in enumerate(authors):
+        conn.execute(text('insert into book_author values (:book_id, :author_id, :index)'),
+                     book_id=bookk.id,
+                     author_id=authorr.id,
+                     index=i)
+
+
 def insert_book_into_series(conn: sqlalchemy.engine.Connection,
-                            bookk,
+                            bookk: Book,
                             series: series.Series,
                             position=None):
     if position is None:
@@ -103,6 +123,12 @@ def insert_book_into_series(conn: sqlalchemy.engine.Connection,
                  book_id=bookk.id,
                  series_id=series.id,
                  position=position)
+
+
+def remove_book_from_series(conn,
+                            bookk: Book):
+    conn.execute(text('delete from book_series where book_id = :book_id'),
+                 book_id=bookk.id)
 
 
 def get_books_by_series(conn, series: series.Series):

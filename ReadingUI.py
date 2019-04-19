@@ -22,8 +22,6 @@ class ReadingListUI:
         label1.image = bardejov
         label1.place(x=0, y=0)
 
-
-
         self.label = Label(master, text="Welcome to ManageMe ")
         self.label.config(font = ("Comic Sans", 44))
         self.label.place(x = 300, y = 100)
@@ -31,7 +29,7 @@ class ReadingListUI:
         self.add_book_button = Button(master, text="Add Book", command=self.addBook)
         self.add_book_button.place(x=300, y=150)
 
-        self.edit_book_button = Button(master, text="Edit Book", command=self.editBook)
+        self.edit_book_button = Button(master, text="View/Edit Book", command=self.editBook)
         self.edit_book_button.place(x=400, y=150)
 
         self.add_series_button = Button(master, text="Add Series", command=self.addSeries)
@@ -309,9 +307,11 @@ class ReadingListUI:
                        reading_status_text):
         def result():
             title = book_name_text.get("1.0", END).strip()
-            author_name = author_text.get("1.0", END).strip()
-            if author_name:
-                authors = [readinglist.author.get_author_by_name(conn, author_name)]
+            author_text = author_text.get("1.0", END).strip()
+            if author_text:
+                author_names = ', '.split(author_text)
+                authors = [readinglist.author.get_author_by_name(conn, author_name)
+                           for author_name in author_names]
             else:
                 authors = []
             book = readinglist.book.insert_book(conn,
@@ -372,11 +372,14 @@ class ReadingListUI:
         return result
 
     def editBook(self):
-        """
-        Connect to backend for adding book
-        """
+        current_selection = self.book_list.curselection()
+        # exit if nothing or the header row is selected
+        if current_selection == () or current_selection == 0:
+            return  # do nothing
+        current_book = self.books[current_selection[0] - 1]
+
         edit_book_window = Toplevel()
-        edit_book_window.title("Edit a Book!")
+        edit_book_window.title("Edit a Book!")   
 
         bardImg = "ReadingLogo.png"
         bard = Image.open(bardImg)
@@ -392,57 +395,98 @@ class ReadingListUI:
         book_name_label = Label(edit_book_window, text="Book Name *")
         book_name_label.place(x=400, y=100)
 
-        book_name_text = Text(edit_book_window, width=30, height=1)
-        book_name_text.place(x=550, y=100)
+        book_name_text_label = Label(edit_book_window, text=current_book.title)
+        book_name_text_label.place(x=550, y=100)
 
-        data_ended_label = Label(edit_book_window, text="Date Completed")
-        data_ended_label.place(x=400, y=140)
+        series_name_label = Label(edit_book_window, text="Series Name *")
+        series_name_label.place(x=400, y=140)
 
-        date_ended_text = Text(edit_book_window, width=30, height=1)
-        date_ended_text.place(x=550, y=140)
+        series_name_text = Text(edit_book_window, width=30, height=1)
+        if current_book.series is not None:
+            series_name_text.insert("1.0", current_book.series.series_name)
+        series_name_text.place(x=550, y=140)
+
+        author_label = Label(edit_book_window, text="Author")
+        author_label.place(x=400, y=180)
+
+        author_text = Text(edit_book_window, width=30, height=1)
+        author_text.insert("1.0", current_book.get_author_string())
+        author_text.place(x=550, y=180)
 
         rating_label = Label(edit_book_window, text="Rating")
-        rating_label.place(x=400, y=180)
+        rating_label.place(x=400, y=220)
 
         rating_text = Text(edit_book_window, width=30, height=1)
-        rating_text.place(x=550, y=180)
+        if current_book.review is not None:
+            rating_text.insert("1.0", str(current_book.review.rating))
+        rating_text.place(x=550, y=220)
 
         review_label = Label(edit_book_window, text="Review")
-        review_label.place(x=400, y=220)
+        review_label.place(x=400, y=260)
 
         review_text = Text(edit_book_window, width=30, height=1)
-        review_text.place(x=550, y=220)
+        if current_book.review is not None:
+            review_text.insert("1.0", str(current_book.review.review_text))
+        review_text.place(x=550, y=260)
 
         reading_status_label = Label(edit_book_window, text="Reading Status")
-        reading_status_label.place(x=400, y=260)
+        reading_status_label.place(x=400, y=300)
 
         reading_status_text = Text(edit_book_window, width=30, height=1)
-        reading_status_text.place(x=550, y=260)
+        if current_book.status is not readinglist.reading_status.UNSET:
+            reading_status_text.insert("1.0", str(current_book.status))
+        reading_status_text.place(x=550, y=300)
 
-        edit_book_button = Button(edit_book_window, text="Edit Book", command=edit_book_window.destroy)
+        hook = self.edit_book_hook(current_book,
+                                   edit_book_window,
+                                   author_text,
+                                   series_name_text,
+                                   rating_text,
+                                   review_text,
+                                   reading_status_text)
+
+        edit_book_button = Button(edit_book_window,
+                                  text="Edit Book",
+                                  command=hook)
         # Add book to backend
         edit_book_button.place(x=475, y=420)
 
         edit_book_window.geometry("1000x1000")
 
 
-    def edit_book_hook(self, window, book_name_text, author_text, series_text, rating_text, review_text, reading_status_text):
+    def edit_book_hook(self,
+                       book,
+                       window,
+                       author_text,
+                       series_text,
+                       rating_text,
+                       review_text,
+                       reading_status_text):
         def result():
-            # title = book_name_text.get("1.0", END).strip()
-            # author_name = author_text.get("1.0", END).strip()
-            # if author_name:
-            #     authors = [readinglist.author.get_author_by_name(conn, author_name)]
-            # else:
-            #     authors = []
-            # book = readinglist.book.set_book(conn, title, authors, readinglist.reading_status.UNSET) #Backend functionality missing - TODO DERICK
-            # series_name = series_text.get("1.0", END).strip()
-            # if series_name:
-            # rating = rating_text.get("1.0", END).strip()
-            # if rating:
-            #
-            # status = reading_status_text.get("1.0", END).strip()
-            # if status:
+            author_names = author_text.get("1.0", END).strip()
+            if author_names != book.get_author_string():
+                author_names = ', '.split(author_text)
+                authors = [readinglist.author.get_author_by_name(conn, author_name)
+                           for author_name in author_names]
+                readinglist.book.set_authors(conn, book, authors)
+            series_name = series_text.get("1.0", END).strip()
+            if series_name != (book.series.series_name if book.series is not None else ''):
+                readinglist.book.remove_book_from_series(conn, book)
+                series = readinglist.series.get_series_by_name(conn, series_name)
+                readinglist.book.insert_book_into_series(conn, book, series)
+            rating = rating_text.get("1.0", END).strip()
+            if rating != (str(book.review.rating) if book.review is not None else ''):
+                if book.review is not None:
+                    readinglist.review.remove_review(conn, book.review)
+                if rating:
+                    rating = float(rating)
+                    review = review_text.get("1.0", END).strip()
+                    readinglist.book.review.insert_review(conn, book, review, rating)
 
+            status = reading_status_text.get("1.0", END).strip()
+            if status:
+                status = readinglist.reading_status.Status.from_str(status)
+                readinglist.book.set_book_status(conn, book, status)
             window.destroy()
             self.list_books()
 
@@ -480,7 +524,7 @@ class ReadingListUI:
 
         row_format = "{:<8}  {:>8}  {:<8}  {:8}"
         self.book_list.insert(0, row_format.format(*headers, sp=" " * 2))
-
+        self.list_books()
         print("Books list!")
 
 
@@ -512,8 +556,7 @@ class ReadingListUI:
         # Connect to Database
         
     def author(self):
-
-        self.authors_list.sort(key=lambda a: a.author_name)
+        self.authors_list.sort(key=lambda a: a.name)
 
 root = Tk()
 reading_gui = ReadingListUI(root)
