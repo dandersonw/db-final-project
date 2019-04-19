@@ -20,6 +20,8 @@ class Book():
                     reading_status.Status.from_id(int(row[2])))
 
     def attach_joined_attributes(self, conn: sqlalchemy.engine.Connection):
+        if self._expanded:
+            return
         self._expanded = True
         self.authors = get_authors_for_book(conn, self)
         self.review = review.get_review_for_book(conn, self)
@@ -41,7 +43,10 @@ def get_book_by_name(conn: sqlalchemy.engine.Connection,
 
 def list_books(conn: sqlalchemy.engine.Connection) -> typing.List[Book]:
     rows = conn.execute('select * from books').fetchall()
-    return [Book.from_db_row(row) for row in rows]
+    books = [Book.from_db_row(row) for row in rows]
+    for b in books:
+        b.attach_joined_attributes(conn)
+    return books
 
 
 def insert_book(conn: sqlalchemy.engine.Connection,

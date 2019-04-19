@@ -10,6 +10,7 @@ class ReadingListUI:
     series_list = readinglist.series.list_series(conn)
     books_list = readinglist.book.list_books(conn)
     authors_list = readinglist.author.list_authors(conn)
+    book_sort_key = lambda _, b: b.id
 
     def __init__(self, master):
         self.master = master
@@ -74,9 +75,7 @@ class ReadingListUI:
 
     def list_books(self):
         self.book_list.delete(0, END)
-        self.books = readinglist.book.list_books(conn)
-        for b in self.books:
-            b.attach_joined_attributes(conn)
+        self.books = sorted(readinglist.book.list_books(conn), key=self.book_sort_key)
         headers = ["title", "status", "series", "rating"] #Test set
 
         row_format = "{:<8}  {:>8}  {:<8}  {:8}"
@@ -507,10 +506,8 @@ class ReadingListUI:
 
 
     def rating(self):
-
-        # self.books_list.sort(key=lambda r: )
-
-
+        self.book_sort_key = lambda b: -1 * (b.review.rating if b.review is not None else 0)
+        self.list_books()
         print("Rating sort!")
 
 
@@ -529,7 +526,6 @@ class ReadingListUI:
 
 
     def reviews(self):
-
         self.book_list.delete(0, END)
         self.books = readinglist.book.list_books(conn)
         for b in self.books:
@@ -556,7 +552,10 @@ class ReadingListUI:
         # Connect to Database
         
     def author(self):
-        self.authors_list.sort(key=lambda a: a.name)
+        # I do not understand what this below line is meant to do
+        # self.authors_list.sort(key=lambda a: a.name)
+        self.book_sort_key = lambda b: b.authors[0].name if b.authors else ''
+        self.list_books()
 
 root = Tk()
 reading_gui = ReadingListUI(root)
