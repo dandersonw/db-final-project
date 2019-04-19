@@ -36,6 +36,38 @@ reading. It is great to be able to look forward to the things you want to read,
 look back on the things you’ve read, and organize your thoughts about your
 reading.
 
+\section*{Technical Specifications}
+
+We used Python 3.7 as our frontend and backend language,
+its SQLAlchemy library with the
+PyMySQL \footnote{https://github.com/PyMySQL/mysqlclient-python}
+connector,
+the Tkinter GUI framework,
+and the pytest testing framework.
+We used the MySQL database with the InnoDB engine.
+Note that we will utilize only the core features of SQLAlchemy:
+most notably we will not utilize its ORM functionality.
+
+We will target Ubuntu 18.10, MacOS 10.14, and MySQL 14.14.
+
+\section*{Installation and Usage}
+
+The project is composed of a Python module for the backend
+and a standalone Python file for the frontend.
+Installation consists of preparing a Python environment,
+installing the backend dependencies,
+and then installing and configuring the backend.
+The frontend needs no installation.
+The project README contains more instructions
+\footnote{https://github.com/dandersonw/db-final-project}.
+Given that you are using an OS version from the
+technical specifications section above,
+all packages and libraries should be of the latest version available
+from your package manager.
+
+With the backend installed and configured you can run the GUI
+by running \texttt{make run\_ui} in the root of the project directory.
+
 \section*{UML and EER Diagrams}
 
 Due to the way that \LaTeX \ distributes figures
@@ -61,20 +93,6 @@ the structure of our tables has not changed.
 \section*{User Flow}
 
 % TODO: Harshitha
-
-\section*{Technical Specifications}
-
-We used Python 3.7 as our frontend and backend language,
-its SQLAlchemy library with the
-PyMySQL \footnote{https://github.com/PyMySQL/mysqlclient-python}
-connector,
-the Tkinter GUI framework,
-and the pytest testing framework.
-We used the MySQL database with the InnoDB engine.
-Note that we will utilize only the core features of SQLAlchemy:
-most notably we will not utilize its ORM functionality.
-
-We will target Ubuntu 18.10, MacOS 10.14, and MySQL 14.14.
 
 \section*{Lessons Learned}
 

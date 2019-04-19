@@ -19,7 +19,7 @@ def create_db(overwrite=False):
             sqlalchemy_utils.drop_database(db.engine.url)
         else:
             raise Exception('Database already exists!')
-    sqlalchemy_utils.create_database(db.engine.url)    
+    sqlalchemy_utils.create_database(db.engine.url)
     script = ''.join(list(open('./scripts/create_db.sql')))
     db.engine.execute(script)
 

@@ -8,6 +8,9 @@ endif
 
 .EXPORT_ALL_VARIABLES:
 
+run_ui:
+	python ReadingUI.py
+
 make_config:
 	bash ./scripts/make_db_config.sh
 
@@ -16,6 +19,9 @@ drop_db:
 
 create_db:
 	python scripts/create_db.py
+
+insert_seed_data:
+	python scripts/insert_test_data.py
 
 regenerate_db:
 	python scripts/create_db.py --overwrite
