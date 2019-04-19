@@ -120,13 +120,13 @@ def set_authors(conn,
 
 def insert_book_into_series(conn: sqlalchemy.engine.Connection,
                             bookk: Book,
-                            series: series.Series,
+                            seriess: series.Series,
                             position=None):
     if position is None:
-        position = len(get_books_by_series(conn, series))
+        position = series.series_len(conn, seriess)
     conn.execute(text('insert into book_series values (:book_id, :series_id, :position)'),
                  book_id=bookk.id,
-                 series_id=series.id,
+                 series_id=seriess.id,
                  position=position)
 
 
