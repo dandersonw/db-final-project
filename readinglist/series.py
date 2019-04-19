@@ -45,3 +45,10 @@ def insert_series(conn: sqlalchemy.engine.Connection,
                      series_id=series_id,
                      position=i)
     return Series(series_id, series_name)
+
+
+def series_len(conn,
+               series: Series):
+    result = conn.execute(text('select series_len(:series_id)'),
+                          series_id=series.id)
+    return result.fetchone()[0]

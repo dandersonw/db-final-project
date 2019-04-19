@@ -80,6 +80,12 @@ begin
         end if;
 end;
 
+create function series_len (series_id integer)
+returns integer
+begin
+  return (select count(*) from book_series where book_series.series_id = series_id);
+end;
+
 create trigger reviews_before_insert before insert on reviews
 for each row call check_rating(NEW.rating);
 

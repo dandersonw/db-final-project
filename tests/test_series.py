@@ -23,3 +23,8 @@ def test_get_series(db_transaction):
     bookk = book.get_book_by_name(db_transaction.connection, '1Q84 Volume 1')
     seriess = book.get_series(db_transaction.connection, bookk)
     assert '1Q84' == seriess.series_name
+
+
+def test_series_len(db_transaction):
+    seriess = series.get_series_by_name(db_transaction.connection, '1Q84')
+    assert 4 == series.series_len(db_transaction.connection, seriess)
