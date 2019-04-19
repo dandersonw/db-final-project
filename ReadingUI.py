@@ -30,7 +30,7 @@ class ReadingListUI:
         self.add_book_button.place(x=300, y=150)
 
         self.edit_book_button = Button(master, text="View/Edit Book", command=self.editBook)
-        self.edit_book_button.place(x=400, y=150)
+        self.edit_book_button.place(x=375, y=150)
 
         self.add_series_button = Button(master, text="Add Series", command=self.addSeries)
         self.add_series_button.place(x=500, y=150)
@@ -307,9 +307,9 @@ class ReadingListUI:
                        reading_status_text):
         def result():
             title = book_name_text.get("1.0", END).strip()
-            author_text = author_text.get("1.0", END).strip()
-            if author_text:
-                author_names = ', '.split(author_text)
+            author_names = author_text.get("1.0", END).strip()
+            if author_names:
+                author_names = author_names.split(', ')
                 authors = [readinglist.author.get_author_by_name(conn, author_name)
                            for author_name in author_names]
             else:
@@ -465,7 +465,7 @@ class ReadingListUI:
         def result():
             author_names = author_text.get("1.0", END).strip()
             if author_names != book.get_author_string():
-                author_names = ', '.split(author_text)
+                author_names = author_names.split(', ')
                 authors = [readinglist.author.get_author_by_name(conn, author_name)
                            for author_name in author_names]
                 readinglist.book.set_authors(conn, book, authors)
