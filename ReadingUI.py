@@ -5,6 +5,7 @@ import readinglist
 
 conn = readinglist.db.engine.connect()
 
+
 class ReadingListUI:
 
     series_list = readinglist.series.list_series(conn)
@@ -31,13 +32,13 @@ class ReadingListUI:
         self.add_book_button.place(x=300, y=150)
 
         self.edit_book_button = Button(master, text="View/Edit Book", command=self.editBook)
-        self.edit_book_button.place(x=375, y=150)
+        self.edit_book_button.place(x=400, y=150)
 
         self.add_series_button = Button(master, text="Add Series", command=self.addSeries)
-        self.add_series_button.place(x=500, y=150)
+        self.add_series_button.place(x=530, y=150)
 
         self.add_author_button = Button(master, text="Add Author", command=self.addAuthor)
-        self.add_author_button.place(x=600, y=150)
+        self.add_author_button.place(x=630, y=150)
 
         self.series_sort_button = Button(master, text="Sort By Series", command=self.series)
         self.series_sort_button.place(x = 350, y = 200)
@@ -229,8 +230,7 @@ class ReadingListUI:
 
         add_series_button = Button(add_series_window,
                                  text="Add Series", command = self.add_series_hook(add_series_window, series_name_text,
-                                                                                   author_text, rating_text, review_text,
-                                                                                   reading_status_text))
+                                                                                   author_text))
 
 
         add_series_button.place(x=475, y=420)
@@ -290,7 +290,7 @@ class ReadingListUI:
 
         add_author_button = Button(add_author_window,
                                  text="Add Author",
-                                 command=self.add_author_hook(add_author_window, author_text, rating_text, review_text, reading_status_text))
+                                 command=self.add_author_hook(add_author_window, author_text))
 
         add_author_button.place(x=475, y=420)
 
@@ -337,33 +337,19 @@ class ReadingListUI:
             self.list_books()
         return result
 
-
-    def add_series_hook(self, window, series_text, author_text, rating_text,
-                       review_text,
-                       reading_status_text):
+    def add_series_hook(self, window, series_text, author_text):
         def result():
             series_name = series_text.get("1.0", END).strip()
             author_name = author_text.get("1.0", END).strip()
             readinglist.series.insert_series(conn, series_name, author_name, "")
-            #####------------------
-                # readinglist.series.insert_series(conn, series_name, author_text)
-
-            # rating = rating_text.get("1.0", END).strip()
-            # if rating:
-            #     rating = float(rating_text.get("1.0", END).strip())
-            #     review = review_text.get("1.0", END).strip()
-            # status = reading_status_text.get("1.0", END).strip()
-            # if status:
-            #     status = readinglist.reading_status.Status.from_str(status)
             window.destroy()
             self.list_books()
         return result
-    def add_author_hook(self, window, author_text, rating_text, review_text, reading_status_text):
+
+    def add_author_hook(self, window, author_text):
         def result():
             author_name = author_text.get("1.0", END).strip()
-            author_name = author_text.get("1.0", END).strip()
             readinglist.author.insert_author(conn, author_name)
-            #####------------------
 
             window.destroy()
             self.list_books()
@@ -372,7 +358,7 @@ class ReadingListUI:
 
     def editBook(self):
         current_selection = self.book_list.curselection()
-        # exit if nothing or the header row is selected
+
         if current_selection == () or current_selection == 0:
             return  # do nothing
         current_book = self.books[current_selection[0] - 1]
@@ -447,7 +433,7 @@ class ReadingListUI:
         edit_book_button = Button(edit_book_window,
                                   text="Edit Book",
                                   command=hook)
-        # Add book to backend
+
         edit_book_button.place(x=475, y=420)
 
         edit_book_window.geometry("1000x1000")
@@ -547,15 +533,12 @@ class ReadingListUI:
         idx = current_selection[0] - 1
         print(idx)
         book = self.books[idx]
-        # readinglist.book.delete_book(conn, book)
         readinglist.book.delete_book(conn, book)
-        # Connect to Database
         
     def author(self):
-        # I do not understand what this below line is meant to do
-        # self.authors_list.sort(key=lambda a: a.name)
         self.book_sort_key = lambda b: b.authors[0].name if b.authors else ''
         self.list_books()
+
 
 root = Tk()
 reading_gui = ReadingListUI(root)
