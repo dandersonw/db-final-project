@@ -198,36 +198,6 @@ class ReadingListUI:
         author_text = Text(add_series_window, width=30, height=1)
         author_text.place(x=550, y=140)
 
-        date_started_label = Label(add_series_window, text="Date Started *")
-        date_started_label.place(x=400, y=220)
-
-        date_started_text = Text(add_series_window, width=30, height=1)
-        date_started_text.place(x=550, y=220)
-
-        data_ended_label = Label(add_series_window, text="Date Completed")
-        data_ended_label.place(x=400, y=260)
-
-        date_ended_text = Text(add_series_window, width=30, height=1)
-        date_ended_text.place(x=550, y=260)
-
-        rating_label = Label(add_series_window, text="Rating")
-        rating_label.place(x=400, y=300)
-
-        rating_text = Text(add_series_window, width=30, height=1)
-        rating_text.place(x=550, y=300)
-
-        review_label = Label(add_series_window, text="Review")
-        review_label.place(x=400, y=340)
-
-        review_text = Text(add_series_window, width=30, height=1)
-        review_text.place(x=550, y=340)
-
-        reading_status_label = Label(add_series_window, text="Reading Status")
-        reading_status_label.place(x=400, y=380)
-
-        reading_status_text = Text(add_series_window, width=30, height=1)
-        reading_status_text.place(x=550, y=380)
-
         add_series_button = Button(add_series_window,
                                  text="Add Series", command = self.add_series_hook(add_series_window, series_name_text,
                                                                                    author_text))
@@ -257,36 +227,6 @@ class ReadingListUI:
 
         author_text = Text(add_author_window, width=30, height=1)
         author_text.place(x=550, y=140)
-
-        date_started_label = Label(add_author_window, text="Date Started *")
-        date_started_label.place(x=400, y=220)
-
-        date_started_text = Text(add_author_window, width=30, height=1)
-        date_started_text.place(x=550, y=220)
-
-        data_ended_label = Label(add_author_window, text="Date Completed")
-        data_ended_label.place(x=400, y=260)
-
-        date_ended_text = Text(add_author_window, width=30, height=1)
-        date_ended_text.place(x=550, y=260)
-
-        rating_label = Label(add_author_window, text="Rating")
-        rating_label.place(x=400, y=300)
-
-        rating_text = Text(add_author_window, width=30, height=1)
-        rating_text.place(x=550, y=300)
-
-        review_label = Label(add_author_window, text="Review")
-        review_label.place(x=400, y=340)
-
-        review_text = Text(add_author_window, width=30, height=1)
-        review_text.place(x=550, y=340)
-
-        reading_status_label = Label(add_author_window, text="Reading Status")
-        reading_status_label.place(x=400, y=380)
-
-        reading_status_text = Text(add_author_window, width=30, height=1)
-        reading_status_text.place(x=550, y=380)
 
         add_author_button = Button(add_author_window,
                                  text="Add Author",
