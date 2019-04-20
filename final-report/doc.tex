@@ -173,9 +173,8 @@ Python like possible in Java.
 
 \subsubsection*{Known Unworking Code}
 
-When adding a new book, there are issues with the backend at times that throws errors as it doesn't 
-recognise that procedures called do exist. This does not happen at all times and it is hard to zero 
-in on the exact cause of error as the error is sporadic.
+Exceptions are thrown when adding a Book Name-Author pair more than once and these are not caught. In 
+addition, when attempting to delete a book without choosing it from the list also throw unhandled exceptions.
 
 \section*{Future Work}
 
